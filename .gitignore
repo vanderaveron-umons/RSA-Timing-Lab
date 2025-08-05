@@ -1,0 +1,33 @@
+# Environments
+.env
+.envrc
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE configuration files (PyCharm, VSCode)
+.idea/
+.vscode/
+.spyderproject
+.spyproject
+
+# Compiled and cached Python files
+__pycache__/
+*.py[codz]
+*$py.class
+
+# Build / Distribution / Packaging
+build/
+dist/
+eggs/
+.eggs/
+*.egg-info/
+
+# Other
+.DS_Store
+
+# Results directory
+results/

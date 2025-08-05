@@ -1,0 +1,22 @@
+[build-system]
+# Cette section est standard et indique les outils nécessaires pour construire le package
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# --- Métadonnées du Projet ---
+name = "rsa-timing-lab"
+version = "0.1.0"
+description = "A laboratory for studying RSA timing attacks."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+  { name="Votre Nom", email="votre@email.com" },
+]
+
+# --- Dépendances du Projet ---
+# Listez ici les bibliothèques externes que votre code utilise.
+dependencies = [
+    "numpy",
+    "pandas",
+]
