@@ -21,9 +21,9 @@ class TimedRSAInterface(ABC):
             public_key (RSAPublicKey): The RSA public key to use.
 
         Returns:
-            (int, float): A tuple containing the encrypted ciphertext and the time taken for the operation (in seconds).
+            (int, float): A tuple containing the encrypted ciphertext, and
+                          the time taken for the operation (in seconds).
         """
-        pass
 
 
     @abstractmethod
@@ -36,9 +36,10 @@ class TimedRSAInterface(ABC):
             private_key (RSAKey): The RSA private key to use.
 
         Returns:
-        (int, float): A tuple containing the decrypted message and the time taken for the operation (in seconds).
+        (int, float): A tuple containing the decrypted message, and
+                      the time taken for the operation (in seconds).
         """
-        pass
+
 
     def timed_sign(self, message: int, private_key: RSAKey) -> Tuple[int, float]:
         """
@@ -52,12 +53,19 @@ class TimedRSAInterface(ABC):
             private_key (RSAKey): The RSA private key to use for signing.
 
         Returns:
-            (int, float): A tuple containing the signature and the time taken.
+            (int, float): A tuple containing the signature, and
+                          the time taken for the operation (in seconds).
         """
         # The signing operation is the same as decryption
         return self.timed_decrypt(message, private_key)
 
-    def timed_verify(self, signature: int, message: int, public_key: RSAPublicKey) -> Tuple[bool, float]:
+    def timed_verify(
+            self,
+            signature: int,
+            message: int,
+            public_key: RSAPublicKey
+    ) -> Tuple[bool, float]:
+
         """
         Verifies the signature against the original message.
 
@@ -69,11 +77,12 @@ class TimedRSAInterface(ABC):
             public_key (RSAPublicKey): The RSA public key to use for verification.
 
         Returns:
-            (bool, float): A tuple containing a boolean (True if the signature valid) and the time taken.
+            (bool, float): A tuple containing a boolean (True if the signature valid), and
+                           the time taken for the operation (in seconds).
         """
         # The verification operation is encryption followed by a comparison
         recovered_message, timing = self.timed_encrypt(signature, public_key)
-        is_valid = (recovered_message == message)
+        is_valid = recovered_message == message
         return is_valid, timing
 
 
@@ -85,7 +94,12 @@ class TimingAttackInterface(ABC):
 
     @classmethod
     @abstractmethod
-    def from_data(cls, public_key: RSAPublicKey, timing_data: list[TimingData], **kwargs) -> 'TimingAttackInterface':
+    def from_data(
+        cls,
+        public_key: RSAPublicKey,
+        timing_data: list[TimingData],
+        **kwargs
+    ) -> 'TimingAttackInterface':
         """
         A factory method to create an attack instance from collected data.
 
@@ -97,7 +111,6 @@ class TimingAttackInterface(ABC):
         Returns:
             A configured instance of the attack class.
         """
-        pass
 
     @abstractmethod
     def attack(self, limit_max_samples: Optional[int] = None) -> AttackResult:
@@ -105,9 +118,9 @@ class TimingAttackInterface(ABC):
         Executes the timing attack to recover the private key.
 
         Args:
-            limit_max_samples (int, optional): The maximum number of timing samples to use. Defaults to None, which uses all samples.
+            limit_max_samples (int, optional): The maximum number of timing samples to use.
+                                            Defaults to None, which uses all samples.
 
         Returns:
             An AttackResult object with the outcome.
         """
-        pass

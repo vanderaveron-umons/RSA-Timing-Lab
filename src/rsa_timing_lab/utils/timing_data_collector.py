@@ -29,7 +29,8 @@ class TimingDataCollector:
             seed (int, optional): The seed for the random number generator. Defaults to None.
 
         Returns:
-            (List[TimingData], float): A tuple containing the timing samples and the time taken for the operation (in seconds).
+            (List[TimingData], float): A tuple containing the timing samples, and
+                                       the time taken for the operation (in seconds).
         """
         if num_samples <= 0:
             raise ValueError("Number of samples must be positive.")

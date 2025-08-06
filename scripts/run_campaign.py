@@ -16,8 +16,9 @@ from rsa_timing_lab.utils import data_manager
 # --- 1. Define Testable Configurations ---
 # This is where you can easily add new RSA implementations to test.
 AVAILABLE_CONFIGURATIONS = {
-    "vuln_0us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.0}},
-    "vuln_50us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.00005}},
+    "vuln_0us":   {"class": VulnerableRSA, "params": {"sleep_duration": 0.0}},
+    "vuln_10us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00001}},
+    "vuln_50us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00005}},
     "vuln_100us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.0001}},
     # Example for a future secure implementation:
     # "secure_v1": {"class": SecureRSA, "params": {}},
@@ -214,13 +215,13 @@ class ExperimentRunner:
 # --- 5. Script Entry Point and Argument Parsing ---
 def main():
     parser = argparse.ArgumentParser(description="Run an RSA Timing Attack Experiment Campaign.")
-    parser.add_argument('--configs', nargs='+', default=["vuln_0us", "vuln_50us"],
+    parser.add_argument('--configs', nargs='+', default=["vuln_0us", "vuln_10us", "vuln_50us", "vuln_100us"],
                         choices=AVAILABLE_CONFIGURATIONS.keys(), help="List of RSA configurations to test.")
-    parser.add_argument('--key-sizes', type=int, nargs='+', default=[32, 64], help="List of key sizes to test.")
-    parser.add_argument('--num-keys', type=int, default=3, help="Number of keys to generate per config.")
-    parser.add_argument('--samples', type=int, nargs='+', default=[1000, 2000, 5000],
+    parser.add_argument('--key-sizes', type=int, nargs='+', default=[64, 128], help="List of key sizes to test.")
+    parser.add_argument('--num-keys', type=int, default=10, help="Number of keys to generate per config.")
+    parser.add_argument('--samples', type=int, nargs='+', default=[10000, 20000, 40000, 80000, 160000],
                         help="List of sample counts for attacks.")
-    parser.add_argument('--max-samples', type=int, default=5000, help="Maximum number of samples to collect per key.")
+    parser.add_argument('--max-samples', type=int, default=160000, help="Maximum number of samples to collect per key.")
     parser.add_argument('--seed', type=int, default=42, help="Initial random seed for reproducibility.")
     args = parser.parse_args()
 

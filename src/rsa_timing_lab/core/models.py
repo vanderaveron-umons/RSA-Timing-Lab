@@ -43,7 +43,8 @@ class RSAKey:
     Represents an RSA key, with both private and public elements.
 
     Attributes:
-        n (int): The RSA modulus (the product of the two secret primes, same as in the corresponding public key).
+        n (int): The RSA modulus. It is the product of the two secret primes,
+                 same as in the corresponding public key.
         e (int): The public exponent (typically 65537, same as in the corresponding public key).
         d (int): The private exponent (multiplicative inverse of e mod φ(n)).
         p (int): First prime factor.
@@ -79,7 +80,9 @@ class RSAKey:
             raise ValueError("Second prime factor (q) must be strictly greater than 1.")
 
         if self.p == self.q:
-            raise ValueError("First prime factor (p) must be different than second prime factor (q).")
+            raise ValueError(
+                "First prime factor (p) must be different than second prime factor (q)."
+            )
 
         if self.p * self.q != self.n:
             raise ValueError("Modulus (n) is not equal to the product of prime factors (p,q).")
@@ -95,9 +98,9 @@ class RSAKey:
             raise ValueError("φ(n) is not coprime to e.")
 
         if self.d != pow(self.e, -1, phi):
-            raise ValueError("Private exponent (d) D is not the multiplicative inverse of e mod φ(n).")
-
-
+            raise ValueError(
+                "Private exponent (d) D is not the multiplicative inverse of e mod φ(n)."
+            )
 
 
     @property
@@ -148,7 +151,7 @@ class AttackResult:
     def __post_init__(self):
         if self.attack_time < 0:
             raise ValueError("Attack time cannot be negative.")
-        
+
         if self.samples_used < 0:
             raise ValueError("Samples used cannot be negative.")
 

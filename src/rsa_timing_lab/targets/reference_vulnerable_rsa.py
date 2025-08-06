@@ -86,7 +86,8 @@ class _MontgomeryContext:
 
     Args:
         modulus (int): The modulus (Montgomery multiplication requires odd modulus).
-        sleep_duration (float, optional): Time to sleep on extra reduction (for side-channel attack demo).
+        sleep_duration (float, optional): Time to sleep on extra reduction.
+                                          Used for side-channel attack demo.
 
     Raises:
         ValueError: If modulus is even.
@@ -174,8 +175,3 @@ class _MontgomeryContext:
                 int: Product in Montgomery form
         """
         return self._reduce(a_mont * b_mont)
-
-
-
-
-

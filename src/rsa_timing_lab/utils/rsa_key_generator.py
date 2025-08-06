@@ -11,14 +11,20 @@ class RSAKeyGenerator:
     """
 
     @staticmethod
-    def generate_keypair(key_length: int, public_exponent: int = 65537, max_attempts: int = 10000, seed: Optional[int] = None) -> RSAKey:
+    def generate_keypair(
+        key_length: int,
+        public_exponent: int = 65537,
+        max_attempts: int = 10000,
+        seed: Optional[int] = None
+    ) -> RSAKey:
         """
         Generate a new RSA key pair with the specified bit length.
 
         Args:
             key_length (int): Desired bit length of the RSA modulus (e.g., 2048).
             public_exponent (int): The public exponent (e). Defaults to 65537.
-            max_attempts (int): The maximum number of attempts to generate RSA keys. Defaults to 10000.
+            max_attempts (int): The maximum number of attempts to generate RSA keys.
+                                Defaults to 10000.
             seed (int, optional): random seed for forcing reproducibility.
 
         Returns:
@@ -60,4 +66,6 @@ class RSAKeyGenerator:
                 d = pow(public_exponent, -1, phi)
                 return RSAKey(n, e, d, p, q)
 
-        raise RuntimeError(f"Unable to generate suitable RSA key pair after {max_attempts} attempts")
+        raise RuntimeError(
+            f"Unable to generate suitable RSA key pair after {max_attempts} attempts"
+        )

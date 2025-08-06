@@ -1,7 +1,6 @@
 import time
-import random
-import numpy as np
 from typing import List, Optional
+import numpy as np
 
 from rsa_timing_lab.core import TimingAttackInterface, RSAPublicKey, TimingData, AttackResult
 
@@ -62,7 +61,12 @@ class DhemAttack(TimingAttackInterface):
         def montgomery_multiply(self, a_mont: int, b_mont: int) -> int:
             return self.montgomery_reduce(a_mont * b_mont)
 
-    def __init__(self, public_key: RSAPublicKey, timing_data: List[TimingData], verbose: bool = False):
+    def __init__(
+        self,
+        public_key: RSAPublicKey,
+        timing_data: List[TimingData],
+        verbose: bool = False
+    ):
         self.public_key = public_key
         self.timing_data = timing_data
         self.verbose = verbose
@@ -72,12 +76,18 @@ class DhemAttack(TimingAttackInterface):
         self.montgomery = self._MontgomerySimulator(self.public_key.n)
 
     @classmethod
-    def from_data(cls, public_key: RSAPublicKey, timing_data: List[TimingData], **kwargs) -> 'DhemAttack':
+    def from_data(
+        cls,
+        public_key: RSAPublicKey,
+        timing_data: List[TimingData],
+        **kwargs
+    ) -> 'DhemAttack':
         """
         Factory method to create a configured attack instance.
 
         Args:
-            public_key (RSAPublicKey): RSA public key (provides modulus, and allows to check if the recovered private key works.
+            public_key (RSAPublicKey): RSA public key. Provides modulus, and allows to check if
+                                       the recovered private key works.
             timing_data (List[TimingData]): List of timing measurements with ciphertexts.
             kwargs: Additional attack-specific parameters.
 
@@ -91,18 +101,20 @@ class DhemAttack(TimingAttackInterface):
           Execute the Dhem timing attack to recover the private key bit by bit.
 
           Args:
-              limit_max_samples (int, optional): The maximum number of timing samples to use. Defaults to None, which uses all samples.
+              limit_max_samples (int, optional): The maximum number of timing samples to use.
+                                                 Defaults to None, which uses all samples.
 
           Returns:
               AttackResult with recovered private key and timing information
           """
         start_time: float = time.time()
 
-        samples_to_use: List[TimingData] = self.timing_data[
-                                           :limit_max_samples] if limit_max_samples else self.timing_data
+        samples_to_use: List[TimingData] = (
+            self.timing_data[:limit_max_samples]
+            if limit_max_samples
+            else self.timing_data
+        )
         candidate_key: str = self._attack(samples_to_use)
-
-        # TODO: trim extra bits
 
         recovered_bits: str = self._trim_key(candidate_key, self.public_key)
 
@@ -181,9 +193,15 @@ class DhemAttack(TimingAttackInterface):
             # Process all known bits (except the first '1')
             # The initial state for the loop is m^1.
             for bit_char in known_bits[1:]:
-                current_result_mont = self.montgomery.montgomery_multiply(current_result_mont, current_result_mont)
+                current_result_mont = self.montgomery.montgomery_multiply(
+                    current_result_mont,
+                    current_result_mont
+                )
                 if bit_char == '1':
-                    current_result_mont = self.montgomery.montgomery_multiply(current_result_mont, base_mont)
+                    current_result_mont = self.montgomery.montgomery_multiply(
+                        current_result_mont,
+                        base_mont
+                )
 
             # Now, we can compute m_temp
             m_temp = current_result_mont
@@ -234,13 +252,15 @@ class DhemAttack(TimingAttackInterface):
 
         # Starts with the full length private exponent and trim up to three bits
         for length in range(len(candidate_key), len(candidate_key) - 3, -1):
-            candidate_key = candidate_key[:length]
-            if self._is_key_valid(candidate_key, public_key):
+            test_key = candidate_key[:length]
+            if self._is_key_valid(test_key, public_key):
                 if self.verbose:
-                    if len(candidate_key) == len(candidate_key):
+                    if len(test_key) == len(candidate_key):
                         print("     -> Full key is functionally valid.")
                     else:
-                        print(f"     -> Found functional key of length {len(candidate_key)} after trimming.")
+                        print(
+                            f"     -> Found functional key of length {len(candidate_key)} "
+                             "after trimming.")
                 return candidate_key
 
         if self.verbose:
@@ -273,4 +293,3 @@ class DhemAttack(TimingAttackInterface):
         except (ValueError, OverflowError):
             # Handles cases where key_bits is not a valid binary string or 'd' is too large
             return False
-
