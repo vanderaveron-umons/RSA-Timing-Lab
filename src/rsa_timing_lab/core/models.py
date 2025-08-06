@@ -1,5 +1,6 @@
 import math
 from dataclasses import dataclass
+from rsa_timing_lab.utils.math import is_prime
 
 
 @dataclass(frozen=True, slots=True)
@@ -18,18 +19,23 @@ class RSAPublicKey:
     e: int
 
     def __post_init__(self):
+        # Basic constraints
         if self.n <= 0:
             raise ValueError("Modulus (n) must be positive")
-        if self.n % 2 == 0:
-            raise ValueError("Modulus (n) must be odd.")
-
         if self.e < 3:
             raise ValueError("Public exponent (e) must be equal or greater than 3.")
+
+        # Parity constraints
+        if self.n % 2 == 0:
+            raise ValueError("Modulus (n) must be odd.")
         if self.e % 2 == 0:
             raise ValueError("Public exponent (e) must be odd.")
 
+        # Relationship and security constraints
         if self.e >= self.n:
             raise ValueError("Public exponent (e) must be strictly less than modulus (n).")
+        if is_prime(self.n):
+            raise ValueError("Modulus (n) must not be a prime number.")
 
 @dataclass(frozen=True, slots=True)
 class RSAKey:
@@ -66,13 +72,6 @@ class RSAKey:
         if self.e >= self.n:
             raise ValueError("Public exponent (e) must be strictly less than modulus (n).")
 
-        phi = (self.p - 1) * (self.q - 1)
-        if math.gcd(phi, self.e) != 1:
-            raise ValueError("φ(n) is not coprime to e.")
-
-        if self.d != pow(self.e, -1, phi):
-            raise ValueError("Private exponent (d) D is not the multiplicative inverse of e mod φ(n).")
-
         if self.p <= 1:
             raise ValueError("First prime factor (p) must be strictly greater than 1.")
 
@@ -84,6 +83,22 @@ class RSAKey:
 
         if self.p * self.q != self.n:
             raise ValueError("Modulus (n) is not equal to the product of prime factors (p,q).")
+
+        if not is_prime(self.p):
+            raise ValueError("First prime factor (p) is not prime.")
+
+        if not is_prime(self.q):
+            raise ValueError("Second prime factor (q) is not prime.")
+
+        phi = (self.p - 1) * (self.q - 1)
+        if math.gcd(phi, self.e) != 1:
+            raise ValueError("φ(n) is not coprime to e.")
+
+        if self.d != pow(self.e, -1, phi):
+            raise ValueError("Private exponent (d) D is not the multiplicative inverse of e mod φ(n).")
+
+
+
 
     @property
     def public_key(self) -> RSAPublicKey:
