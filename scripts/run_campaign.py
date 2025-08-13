@@ -7,7 +7,7 @@ from typing import List, Dict, Tuple
 from dataclasses import dataclass, asdict
 
 from rsa_timing_lab.core import TimingAttackInterface
-from rsa_timing_lab.targets import VulnerableRSA
+from rsa_timing_lab.targets import VulnerableRSA, AlwaysSubstractRSA
 from rsa_timing_lab.attacks import DhemAttack
 from rsa_timing_lab.utils.rsa_key_generator import RSAKeyGenerator
 from rsa_timing_lab.utils.timing_data_collector import TimingDataCollector
@@ -16,10 +16,15 @@ from rsa_timing_lab.utils import data_manager
 # --- 1. Define Testable Configurations ---
 # This is where you can easily add new RSA implementations to test.
 AVAILABLE_CONFIGURATIONS = {
-    "vuln_0us":   {"class": VulnerableRSA, "params": {"sleep_duration": 0.0}},
-    "vuln_10us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00001}},
-    "vuln_50us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00005}},
-    "vuln_100us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.0001}},
+    #"vuln_0us":   {"class": VulnerableRSA, "params": {"sleep_duration": 0.0}},
+    #"vuln_10us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00001}},
+    #"vuln_50us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00005}},
+    #"vuln_100us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.0001}},
+    "always_sub_0us":   {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.0}},
+    "always_sub_10us":  {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.00001}},
+    "always_sub_50us":  {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.00005}},
+    "always_sub_100us": {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.0001}},
+
     # Example for a future secure implementation:
     # "secure_v1": {"class": SecureRSA, "params": {}},
 }
@@ -215,7 +220,7 @@ class ExperimentRunner:
 # --- 5. Script Entry Point and Argument Parsing ---
 def main():
     parser = argparse.ArgumentParser(description="Run an RSA Timing Attack Experiment Campaign.")
-    parser.add_argument('--configs', nargs='+', default=["vuln_0us", "vuln_10us", "vuln_50us", "vuln_100us"],
+    parser.add_argument('--configs', nargs='+', default=AVAILABLE_CONFIGURATIONS.keys(),
                         choices=AVAILABLE_CONFIGURATIONS.keys(), help="List of RSA configurations to test.")
     parser.add_argument('--key-sizes', type=int, nargs='+', default=[64, 128], help="List of key sizes to test.")
     parser.add_argument('--num-keys', type=int, default=10, help="Number of keys to generate per config.")
