@@ -16,10 +16,10 @@ from rsa_timing_lab.utils import data_manager
 # --- 1. Define Testable Configurations ---
 # This is where you can easily add new RSA implementations to test.
 AVAILABLE_CONFIGURATIONS = {
-    #"vuln_0us":   {"class": VulnerableRSA, "params": {"sleep_duration": 0.0}},
-    #"vuln_10us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00001}},
-    #"vuln_50us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00005}},
-    #"vuln_100us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.0001}},
+    "vuln_0us":   {"class": VulnerableRSA, "params": {"sleep_duration": 0.0}},
+    "vuln_10us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00001}},
+    "vuln_50us":  {"class": VulnerableRSA, "params": {"sleep_duration": 0.00005}},
+    "vuln_100us": {"class": VulnerableRSA, "params": {"sleep_duration": 0.0001}},
     "always_sub_0us":   {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.0}},
     "always_sub_10us":  {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.00001}},
     "always_sub_50us":  {"class": AlwaysSubstractRSA, "params": {"sleep_duration": 0.00005}},

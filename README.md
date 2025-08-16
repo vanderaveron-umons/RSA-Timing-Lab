@@ -39,7 +39,7 @@ Follow these steps to set up the laboratory environment on your local machine.
 1.  **Clone the repository:**
 
     ```bash
-    git clone <your-repository-url>
+    git clone https://github.com/vanderaveron-umons/RSA-Timing-Lab.git
     cd RSA-Timing-Lab
     ```
 
@@ -84,14 +84,14 @@ python experiments/run_campaign.py --key-sizes 64 --configs vuln_50us --num-keys
 
 ### Command-Line Arguments
 
-| Argument | Description | Default Value |
-| :--- | :--- | :--- |
-| `--configs` | A list of RSA configurations to test. | `vuln_0us`, `vuln_50us` |
-| `--key-sizes`| A list of key sizes (in bits) to test. | `32`, `64` |
-| `--num-keys` | The number of unique keys to generate for each configuration. | `3` |
-| `--samples` | A list of sample counts to use for the attacks. | `1000`, `2000`, `5000`|
-| `--max-samples`| The maximum number of timing samples to collect for each key. | `5000` |
-| `--seed` | The initial random seed for the entire campaign, ensuring reproducibility. | `42` |
+| Argument        | Description                                                                | Default Value                                              |
+|:----------------|:---------------------------------------------------------------------------|:-----------------------------------------------------------|
+| `--configs`     | A list of RSA configurations to test.                                      | Depends on `AVAILABLE_CONFIGURATIONS` in `run_campaign.py` |
+| `--key-sizes`   | A list of key sizes (in bits) to test.                                     | `64`, `128`                                                |
+| `--num-keys`    | The number of unique keys to generate for each configuration.              | `10`                                                       |
+| `--samples`     | A list of sample counts to use for the attacks.                            | `10000, 20000, 40000, 80000, 160000`                       |
+| `--max-samples` | The maximum number of timing samples to collect for each key.              | `160000`                                                   |
+| `--seed`        | The initial random seed for the entire campaign, ensuring reproducibility. | `42`                                                       |
 
 ### Understanding the Output
 
@@ -116,24 +116,28 @@ This framework is designed to be easily extended.
 1.  Create a new Python file in `src/rsa_lab/targets/` (e.g., `my_secure_rsa.py`).
 2.  Inside this file, create a class that inherits from `TimedRSAInterface`:
     ```python
-    from rsa_lab.core import TimedRSAInterface
-
+    from rsa_timing_lab.core import TimedRSAInterface
+    
     class MySecureRSA(TimedRSAInterface):
         # ... implement timed_encrypt and timed_decrypt ...
     ```
-3.  Open `experiments/run_campaign.py` and register your new implementation in the `AVAILABLE_CONFIGURATIONS` dictionary.
+    ```
+3. Open `rsa_timing_lab/targets/__init__.py` and register your new implementation.
+4. Open `experiments/run_campaign.py` and register your new implementation in the `AVAILABLE_CONFIGURATIONS` dictionary.
 
 ### Adding a New Attack Algorithm
 
 1.  Create a new Python file in `src/rsa_lab/attackers/` (e.g., `my_attack.py`).
 2.  Inside this file, create a class that inherits from `TimingAttackInterface`:
     ```python
-    from rsa_lab.core import TimingAttackInterface
-
+    from rsa_timing_lab.core import TimingAttackInterface
+    
     class MyAttack(TimingAttackInterface):
         # ... implement from_data and attack ...
     ```
-3.  Open `experiments/run_campaign.py` and change the `attack_to_run` variable in the `main` function to use your new class.
+    ```
+3. Open `rsa_timing_lab/attacks/__init__.py` and register your new implementation. 
+4. Open `experiments/run_campaign.py` and change the parameter passed to `ExperimentRunner` in the `main` function to use your new class.
 
 -----
 
@@ -144,9 +148,6 @@ To run the suite of unit tests, you will first need to install the development d
 ```bash
 pip install -e .[dev]
 ```
-
-*(Note: This requires adding a `[project.optional-dependencies]` section for `dev` with `pytest` in your `pyproject.toml`)*
-
 Once installed, run the tests from the project root directory:
 
 ```bash
