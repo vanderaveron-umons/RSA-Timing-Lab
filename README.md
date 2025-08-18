@@ -1,6 +1,5 @@
 # RSA Timing Attack Laboratory
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![codecov](https://codecov.io/github/vanderaveron-umons/RSA-Timing-Lab/graph/badge.svg?token=FH4MVCF0YX)](https://codecov.io/github/vanderaveron-umons/RSA-Timing-Lab)
 
 
 An educational framework for studying and implementing side-channel timing attacks against RSA. This laboratory provides a clear, modular structure for students and researchers to experiment with different RSA implementations (targets) and attack algorithms.
